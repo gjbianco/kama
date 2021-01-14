@@ -1,0 +1,14 @@
+= kama
+
+Kama is a CLI https://en.wikipedia.org/wiki/Pomodoro_Technique[pomodoro timer] written in Go.
+The name comes from the https://en.wikipedia.org/wiki/Toki_Pona[Toki Pona] word meaning "to bring about or summon".
+
+== Usage
+
+Start a timer by running `kama`.
+
+.The following options are available:
+- `-l` timer length in minutes (default 25)
+- `-m` message to display in notification (no effect if silent) (default "timer finished!")
+- `-q` disable the alert notification on timer completion
+- `-w` width of the progress indicator (default 15)
