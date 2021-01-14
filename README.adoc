@@ -2,6 +2,7 @@
 
 Kama is a CLI https://en.wikipedia.org/wiki/Pomodoro_Technique[pomodoro timer] written in Go.
 The name comes from the https://en.wikipedia.org/wiki/Toki_Pona[Toki Pona] word meaning "to bring about or summon".
+It is prounounced like the English word "comma".
 
 == Usage
 
