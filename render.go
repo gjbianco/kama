@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func ProgressBar(percent int, width int) string {
@@ -16,6 +17,6 @@ func ProgressBar(percent int, width int) string {
 	return fmt.Sprintf("[%s]", pips)
 }
 
-func TimeDisplay(currentTime int, totalTime int) string {
-	return fmt.Sprintf("%ds / %ds", currentTime, totalTime)
+func TimeDisplay(currentTime time.Duration, totalTime time.Duration) string {
+	return fmt.Sprintf("%s / %s", currentTime, totalTime)
 }

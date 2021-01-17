@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestProgressBar(t *testing.T) {
 	var tests = []struct {
@@ -23,12 +26,12 @@ func TestProgressBar(t *testing.T) {
 
 func TestTimeDisplay(t *testing.T) {
 	var tests = []struct {
-		currentTime int
-		totalTime   int
+		currentTime time.Duration
+		totalTime   time.Duration
 		want        string
 	}{
-		{1, 10, "1s / 10s"},
-		{30, 500, "30s / 500s"},
+		{time.Second, 10 * time.Second, "1s / 10s"},
+		{30 * time.Minute, 500 * time.Minute, "30m0s / 8h20m0s"},
 	}
 	for _, test := range tests {
 		if got := TimeDisplay(test.currentTime, test.totalTime); got != test.want {
