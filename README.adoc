@@ -9,7 +9,10 @@ It is prounounced like the English word "comma".
 Start a timer by running `kama`.
 
 .The following options are available:
-- `-l` timer length in minutes (default 25)
-- `-m` message to display in notification (no effect if silent) (default "timer finished!")
-- `-q` disable the alert notification on timer completion
-- `-w` width of the progress indicator (default 15)
+- `-t` timer length
+- `-q` disable notification
+- `-m` notification message
+- `-s` width of the progress indicator
+- `-w` forces a work timer
+- `-b` forces a break timer
+- `-l` forces a long break timer

@@ -3,10 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/gen2brain/beeep"
+)
+
+type Verb string
+
+const (
+	Break     Verb = "break"
+	LongBreak Verb = "longbreak"
+	Work      Verb = "work"
 )
 
 const (
@@ -14,21 +21,49 @@ const (
 	timeTick = time.Second
 )
 
-var length = flag.String("l", "25m", "timer length -- default: 25m)'")
-var quiet = flag.Bool("q", false, "disable the alert notification on timer completion")
-var message = flag.String("m", "timer finished!", "message to display in notification (no effect if silent)")
-var width = flag.Int("w", 15, "width of the progress indicator -- default: 15")
+var (
+	startTime = time.Now()
 
-var startTime = time.Now()
+	// CLI flags
+	totalTime = flag.Duration("t", time.Duration(0), "timer length")
+	quiet     = flag.Bool("q", false, "disable notification")
+	message   = flag.String("m", "timer finished!", "notification message")
+	size      = flag.Int("s", 15, "width of the progress indicator")
+
+	// flags to force verb/mode
+	isWork      = flag.Bool("w", true, "forces a work timer")
+	isBreak     = flag.Bool("b", false, "forces a break timer")
+	isLongBreak = flag.Bool("l", false, "forces a long break timer")
+)
 
 func main() {
 	flag.Parse()
-	totalTime, err := time.ParseDuration(*length)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+
+	var verb Verb
+	switch {
+	case *isBreak:
+		verb = Break
+	case *isLongBreak:
+		verb = LongBreak
+	case *isWork:
+		fallthrough
+	default:
+		verb = Work
 	}
-	printDisplay(totalTime)
+
+	if *totalTime == time.Duration(0) {
+		switch verb {
+		case Break:
+			*totalTime = 5 * time.Minute
+		case LongBreak:
+			*totalTime = 15 * time.Minute
+		case Work:
+			*totalTime = 25 * time.Minute
+		}
+	}
+
+	fmt.Printf("[[%s]]\n", verb)
+	printDisplay(*totalTime)
 
 	ticker := time.NewTicker(timeTick)
 	done := make(chan bool)
@@ -39,12 +74,12 @@ func main() {
 			case <-done:
 				return
 			case <-ticker.C:
-				printDisplay(totalTime)
+				printDisplay(*totalTime)
 			}
 		}
 	}()
 
-	time.Sleep(totalTime)
+	time.Sleep(*totalTime)
 	ticker.Stop()
 	done <- true
 
@@ -60,7 +95,7 @@ func printDisplay(totalTime time.Duration) {
 	currentTime := time.Since(startTime).Truncate(time.Second)
 	percent := int(100 * currentTime / totalTime)
 	display := ""
-	display += ProgressBar(percent, *width)
+	display += ProgressBar(percent, *size)
 	display += fmt.Sprintf(" %d%% : ", percent)
 	display += TimeDisplay(currentTime, totalTime)
 	fmt.Printf("%s\r", display)
