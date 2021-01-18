@@ -1,4 +1,4 @@
-module github.com/gjbianco/kama-go
+module github.com/gjbianco/kama
 
 go 1.15
 
