@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/gen2brain/beeep"
+	"gopkg.in/ini.v1"
 )
 
 type Verb string
@@ -31,34 +33,46 @@ var (
 	size      = flag.Int("s", 15, "width of the progress indicator")
 
 	// flags to force verb/mode
-	isWork      = flag.Bool("w", true, "forces a work timer")
 	isBreak     = flag.Bool("b", false, "forces a break timer")
 	isLongBreak = flag.Bool("l", false, "forces a long break timer")
+	isWork      = flag.Bool("w", true, "forces a work timer")
+
+	breakSeconds     = 5 * time.Minute
+	longBreakSeconds = 15 * time.Minute
+	workSeconds      = 25 * time.Minute
 )
 
 func main() {
 	flag.Parse()
 
-	var verb Verb
+	userHome, _ := os.UserHomeDir()
+	cfg, err := ini.Load(userHome + "/.kamarc")
+
+	// retrieve time duration configs
+	if err == nil {
+		breakSeconds = time.Duration(cfg.Section("").Key("break_time").MustInt()) * time.Second
+		longBreakSeconds = time.Duration(cfg.Section("").Key("long_break_time").MustInt()) * time.Second
+		workSeconds = time.Duration(cfg.Section("").Key("work_time").MustInt()) * time.Second
+	}
+
+	verb := Work
 	switch {
 	case *isBreak:
 		verb = Break
 	case *isLongBreak:
 		verb = LongBreak
 	case *isWork:
-		fallthrough
-	default:
 		verb = Work
 	}
 
 	if *totalTime == time.Duration(0) {
 		switch verb {
 		case Break:
-			*totalTime = 5 * time.Minute
+			*totalTime = time.Duration(breakSeconds)
 		case LongBreak:
-			*totalTime = 15 * time.Minute
+			*totalTime = time.Duration(longBreakSeconds)
 		case Work:
-			*totalTime = 25 * time.Minute
+			*totalTime = time.Duration(workSeconds)
 		}
 	}
 

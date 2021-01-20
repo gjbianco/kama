@@ -16,3 +16,10 @@ Start a timer by running `kama`.
 - `-w` forces a work timer
 - `-b` forces a break timer
 - `-l` forces a long break timer
+
+== Configuration
+
+Kama will look for a config file in your user's home directory named `.kamarc`.
+
+An example config is provided in this repository.
+It includes default values for all valid config options.

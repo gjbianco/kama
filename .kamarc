@@ -1,0 +1,4 @@
+# number of seconds for each type of timer
+work_time  = 1500     # 25 minutes
+break_time = 300      # 5 minutes
+long_break_time = 900 # 15 minutes
