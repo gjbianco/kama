@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gen2brain/beeep"
@@ -76,7 +77,7 @@ func main() {
 		}
 	}
 
-	fmt.Printf("[[%s]]\n", verb)
+	fmt.Printf("%s\n", strings.ToUpper(string(verb)))
 	printDisplay(*totalTime)
 
 	ticker := time.NewTicker(timeTick)
@@ -101,6 +102,8 @@ func main() {
 	if !*quiet {
 		// TODO add image icon?
 		beeep.Notify("kama", *message, "")
+		hour, minute, _ := time.Now().Clock()
+		fmt.Printf("finished at %d:%d\n", hour%12, minute)
 	}
 }
 
