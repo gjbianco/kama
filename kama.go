@@ -54,6 +54,8 @@ func main() {
 		breakSeconds = time.Duration(cfg.Section("").Key("break_time").MustInt()) * time.Second
 		longBreakSeconds = time.Duration(cfg.Section("").Key("long_break_time").MustInt()) * time.Second
 		workSeconds = time.Duration(cfg.Section("").Key("work_time").MustInt()) * time.Second
+
+		*size = cfg.Section("").Key("width").MustInt(15)
 	}
 
 	verb := Work
